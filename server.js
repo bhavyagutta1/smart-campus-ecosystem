@@ -9,7 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://arya9032177180_db_user:jN4duoNdtHOmQYsQ@bhavyagutta.dttbyav.mongodb.net/?appName=bhavyagutta';
+const MONGODB_URI = process.env.MONGODB_URI;
+if (!MONGODB_URI) {
+    console.error('MONGODB_URI environment variable is not set. Exiting.');
+    process.exit(1);
+}
 const DB_NAME = process.env.DB_NAME || 'smart_campus';
 
 let dbClient;

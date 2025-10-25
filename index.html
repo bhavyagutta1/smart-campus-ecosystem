@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus Portal - KLH University</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>🎓 Smart Campus</h1>
+                    <p>KLH University Portal</p>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email / Student ID</label>
+                        <input type="text" class="form-control" id="loginEmail" placeholder="Enter your email or ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Enter password" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Login As</label>
+                        <select class="form-control" id="userRole">
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboardPage" class="hidden">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container navbar-content">
+                <div class="navbar-brand">🎓 Smart Campus</div>
+                <div class="navbar-menu">
+                    <a href="#" class="navbar-link" onclick="showDashboard()">Dashboard</a>
+                    <a href="#" class="navbar-link" onclick="showNotifications()">Notifications <span class="badge" id="notifBadge">3</span></a>
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <span id="userName">Student</span>
+                        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="container dashboard" id="mainDashboard">
+            <div class="dashboard-header">
+                <h1>Welcome back, <span id="welcomeName">Student</span>!</h1>
+                <p>Here's what's happening on campus today</p>
+            </div>
+            <div class="stats-grid" id="statsGrid"></div>
+            <h2 style="margin-bottom: 1rem;">Campus Modules</h2>
+            <div class="modules-grid" id="modulesGrid"></div>
+        </div>
+
+        <!-- Lost & Found Section -->
+        <div class="container hidden" id="lostFoundSection">
+            <div class="page-section">
+                <h2>📦 Lost & Found</h2>
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="showReportItemForm()">Report Lost/Found Item</button>
+                </div>
+                <div id="reportItemForm" class="hidden" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-background); border-radius: var(--radius-md);">
+                    <h3 style="margin-bottom: 1rem;">Report Item</h3>
+                    <form id="lostFoundForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Item Type</label>
+                                <select class="form-control" id="itemType" required>
+                                    <option value="lost">Lost</option>
+                                    <option value="found">Found</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Item Name</label>
+                                <input type="text" class="form-control" id="itemName" placeholder="e.g., Blue Backpack" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select class="form-control" id="itemCategory" required>
+                                    <option>Electronics</option>
+                                    <option>Books</option>
+                                    <option>Clothing</option>
+                                    <option>Accessories</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" id="itemLocation" placeholder="Where was it lost/found?" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="itemDescription" placeholder="Provide detailed description..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit Report</button>
+                    </form>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lostFoundTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events Section -->
+        <div class="container hidden" id="eventsSection">
+            <div class="page-section">
+                <h2>📅 Campus Events</h2>
+                <div style="margin-bottom: 2rem;" id="createEventBtn">
+                    <button class="btn btn-primary" onclick="showCreateEventForm()">Create New Event</button>
+                </div>
+                <div id="createEventForm" class="hidden" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-background); border-radius: var(--radius-md);">
+                    <h3 style="margin-bottom: 1rem;">Create Event</h3>
+                    <form id="eventForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Event Name</label>
+                                <input type="text" class="form-control" id="eventName" placeholder="Enter event name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Event Date</label>
+                                <input type="date" class="form-control" id="eventDate" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" id="eventTime" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control" id="eventLocation" placeholder="Event venue" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="eventDescription" placeholder="Event details..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Create Event</button>
+                    </form>
+                </div>
+                <div id="eventsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Feedback Section -->
+        <div class="container hidden" id="feedbackSection">
+            <div class="page-section">
+                <h2>💬 Feedback & Grievances</h2>
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="showFeedbackForm()">Submit Feedback</button>
+                </div>
+                <div id="feedbackFormContainer" class="hidden" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-background); border-radius: var(--radius-md);">
+                    <h3 style="margin-bottom: 1rem;">Submit Feedback</h3>
+                    <form id="feedbackForm">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-control" id="feedbackCategory" required>
+                                <option>Academic</option>
+                                <option>Infrastructure</option>
+                                <option>Facilities</option>
+                                <option>Administration</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="feedbackSubject" placeholder="Brief subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Details</label>
+                            <textarea class="form-control" id="feedbackDetails" placeholder="Provide detailed feedback..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-control" id="feedbackPriority" required>
+                                <option>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="feedbackTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Clubs Section -->
+        <div class="container hidden" id="clubsSection">
+            <div class="page-section">
+                <h2>🎯 Student Clubs</h2>
+                <div class="modules-grid" id="clubsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="container hidden" id="notificationsSection">
+            <div class="page-section">
+                <h2>🔔 Notifications</h2>
+                <div id="notificationsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()">💬</button>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <h3>Campus Assistant</h3>
+            <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="chat-message bot">
+                Hello! I'm your Smart Campus Assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" class="form-control" id="chatInput" placeholder="Ask me anything...">
+            <button class="btn btn-primary btn-sm" onclick="sendChatMessage()">Send</button>
+        </div>
+    </div>
+
+    <!-- Load JavaScript files -->
+    <script src="data/sampleData.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

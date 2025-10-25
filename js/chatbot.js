@@ -1,4 +1,7 @@
-// Chatbot Functionality
+// Chatbot Functionality with Gemini AI
+
+const GEMINI_API_KEY = 'AIzaSyDK2M4YWtEzdlipJp-SEqSsz2IBse3v8Io';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
 function toggleChatbot() {
     const chatWindow = document.getElementById('chatbotWindow');
@@ -10,7 +13,7 @@ function toggleChatbot() {
     }
 }
 
-function sendChatMessage() {
+async function sendChatMessage() {
     const input = document.getElementById('chatInput');
     const message = input.value.trim();
     
@@ -30,20 +33,93 @@ function sendChatMessage() {
     // Scroll to bottom
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-    // Simulate bot typing
-    setTimeout(() => {
-        const response = getBotResponse(message);
+    // Show typing indicator
+    const typingIndicator = document.createElement('div');
+    typingIndicator.className = 'chat-message bot typing-indicator';
+    typingIndicator.id = 'typingIndicator';
+    typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+    messagesContainer.appendChild(typingIndicator);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Get AI response
+    try {
+        const response = await getGeminiResponse(message);
+        
+        // Remove typing indicator
+        document.getElementById('typingIndicator')?.remove();
+        
+        // Add bot response
         const botMessageDiv = document.createElement('div');
         botMessageDiv.className = 'chat-message bot';
         botMessageDiv.textContent = response;
         messagesContainer.appendChild(botMessageDiv);
-        
-        // Scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 500);
+    } catch (error) {
+        document.getElementById('typingIndicator')?.remove();
+        const botMessageDiv = document.createElement('div');
+        botMessageDiv.className = 'chat-message bot';
+        botMessageDiv.textContent = 'Sorry, I encountered an error. ' + getFallbackResponse(message);
+        messagesContainer.appendChild(botMessageDiv);
+        console.error('Chatbot error:', error);
+    }
+
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-function getBotResponse(message) {
+async function getGeminiResponse(userMessage) {
+    // Create context-aware prompt for campus assistant
+    const systemPrompt = `You are a helpful campus assistant for KLH University's Smart Campus Portal. 
+You help students, faculty, and staff with:
+- Campus events and activities
+- Lost and found items
+- Feedback and grievances
+- Student clubs and organizations (Tech Club, Cultural Club, Sports Club, Music Club, Art Club, Photography Club)
+- Campus facilities and services
+- General campus information
+
+Be friendly, concise, and helpful. Keep responses brief (2-3 sentences).
+
+Current campus info:
+- Upcoming events: Tech Fest 2025 (Nov 5), Cultural Night (Nov 10), Career Fair (Nov 15), Sports Day (Nov 8), Hackathon (Nov 12), Music Concert (Nov 20)
+- Active clubs: 6 clubs with 95-200 members each
+- Campus hours: 8 AM - 6 PM (Library until 8 PM)
+
+User question: ${userMessage}`;
+
+    try {
+        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: systemPrompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 200,
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const aiResponse = data.candidates[0].content.parts[0].text;
+        
+        return aiResponse;
+    } catch (error) {
+        console.error('Gemini API Error:', error);
+        // Fallback to simple responses if API fails
+        return getFallbackResponse(userMessage);
+    }
+}
+
+function getFallbackResponse(message) {
     const msg = message.toLowerCase();
     
     // Event-related queries

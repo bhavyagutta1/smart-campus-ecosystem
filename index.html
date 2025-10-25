@@ -223,11 +223,46 @@
                 </table>
             </div>
         </div>
-
         <!-- Clubs Section -->
         <div class="container hidden" id="clubsSection">
             <div class="page-section">
                 <h2>🎯 Student Clubs</h2>
+                
+                <div style="margin-bottom: 2rem;" id="createClubBtn">
+                    <button class="btn btn-primary" onclick="showCreateClubForm()">Create New Club</button>
+                </div>
+
+                <div id="createClubForm" class="hidden" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--color-background); border-radius: var(--radius-md);">
+                    <h3 style="margin-bottom: 1rem;">Create New Club</h3>
+                    <form id="clubForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Club Name</label>
+                                <input type="text" class="form-control" placeholder="Enter club name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Initial Members</label>
+                                <input type="number" class="form-control" placeholder="Number of members" value="1" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Club Icon (Emoji)</label>
+                                <input type="text" class="form-control" placeholder="e.g., 🎨 or 📸" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Theme Color</label>
+                                <input type="color" class="form-control" value="#3b82f6" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" placeholder="Brief description of the club..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Create Club</button>
+                    </form>
+                </div>
+                
                 <div class="modules-grid" id="clubsGrid"></div>
             </div>
         </div>

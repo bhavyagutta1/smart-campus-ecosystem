@@ -19,9 +19,9 @@ A unified digital platform for campus-wide communication and activity management
 
 ## 🌐 Live Demo
 
-**Live Site:** https://bhavyagutta01.github.io/smart-campus-ecosystem/
+**Live Site:** https://bhavyagutta1.github.io/smart-campus-ecosystem/
 
-**GitHub Repository:** https://github.com/bhavyagutta01/smart-campus-ecosystem
+**GitHub Repository:** https://github.com/bhavyagutta1/smart-campus-ecosystem
 
 ## 📋 Prerequisites
 
